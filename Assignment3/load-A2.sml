@@ -40,9 +40,18 @@ fun parse_output (Infilename)=
 		parseString(inp_str)
 	end
 	handle ParseErrorFound (s, line_num, col_num) => (print("Syntax Error:"^Int.toString(line_num)^":"^Int.toString(col_num)^":"^s^"\n"); [])
-fun evaluateParsed (parsedVal : AST.exp list) = 
-	if (null parsedVal) then ([])
-	else ((EVALUATOR.evalExp(hd parsedVal, []))::(evaluateParsed(tl parsedVal)))
+fun evaluateParsed (parsedVal : AST.formula list) = 
+	EVALUATOR.evalProgram(parsedVal, [])
+
+fun typeCheckParsed (parsedVal : AST.formula list) = 
+	TYPE_CHECKER.checkProgram(parsedVal, [])
+
+fun typeCheck (Infilename) = 
+	let 
+		val parsedVal = parse_output(Infilename)
+	in 
+		typeCheckParsed(parsedVal)
+	end
 
 fun evaluate (Infilename) = 
 	let 

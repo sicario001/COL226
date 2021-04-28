@@ -1,0 +1,6 @@
+fun func1 (x:int):int => x PLUS 1 ;
+let
+	x = 5
+in
+	(func1 x PLUS 1)
+end

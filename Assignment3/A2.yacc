@@ -5,11 +5,11 @@
 %name A2
 
 %term
-  ID of string | IF | THEN | ELSE | FI | IMPLIES | AND | OR | XOR | EQUALS | NOT | CONST of bool | RPAREN | LPAREN | TERM | NUM of int | PLUS | MINUS | TIMES | LESSTHAN | GREATERTHAN | NEGATE | LET | IN | END | VAR | EQ | EOF
+  ID of string | IF | THEN | ELSE | FI | IMPLIES | AND | OR | XOR | EQUALS | NOT | CONST of bool | RPAREN | LPAREN | TERM | NUM of int | PLUS | MINUS | TIMES | LESSTHAN | GREATERTHAN | NEGATE | LET | IN | END | VAR | EQ | FUN | COLON | FN | DEF | ARROW | INT | BOOL | EOF
 
 
 %nonterm
-  program of AST.exp list | statement of AST.exp | START of AST.exp list | EXP of AST.exp | DECL of AST.decl
+  program of AST.formula list | statement of AST.formula | START of AST.formula list | EXP of AST.exp | DECL of AST.decl | formula of AST.formula | FUN_DEF of AST.fun_def | FN_DEF of AST.exp | TYPE of AST.typ | APPEXP of AST.exp
 %pos int*int	
 
 (*optional declarations *)
@@ -18,6 +18,7 @@
 
 (* %right ELSE
 %left EQ *)
+%right ARROW
 %right IMPLIES
 %left AND OR XOR EQUALS
 %left LESSTHAN GREATERTHAN
@@ -33,10 +34,32 @@
 %%
 
 START: program (program) | ([])
-program: statement program (statement::program) | EXP ([EXP])
-statement: EXP TERM (EXP)
-  
+program: statement program (statement::program) | formula ([formula])
+statement: formula TERM (formula)
+
+formula:
+	EXP (AST.FormulaExp(EXP))|
+	FUN_DEF (AST.FormulaFunDef(FUN_DEF))
+
+FUN_DEF:
+	FUN ID LPAREN ID COLON TYPE RPAREN COLON TYPE DEF EXP (AST.Fun(ID1, ID2, AST.ARROW(TYPE1, TYPE2), EXP))
+
+TYPE:
+	TYPE ARROW TYPE (AST.ARROW(TYPE1, TYPE2))|
+	INT (AST.INT)|
+	BOOL (AST.BOOL)|
+	LPAREN TYPE RPAREN (TYPE)
+
 DECL: ID EQ EXP (AST.ValDecl(ID, EXP))
+
+APPEXP: 
+	LPAREN EXP EXP RPAREN(AST.AppExp(EXP1, EXP2))
+	
+	
+FN_DEF:
+	FN LPAREN ID COLON TYPE RPAREN COLON TYPE DEF EXP (AST.Fn(ID, AST.ARROW(TYPE1, TYPE2), EXP))
+	
+
 EXP: 
 	IF EXP THEN EXP ELSE EXP FI (AST.IteExp(EXP1, EXP2, EXP3))|
 	EXP PLUS EXP (AST.BinExp(AST.Plus, EXP1, EXP2))|
@@ -55,7 +78,9 @@ EXP:
 	LPAREN EXP RPAREN (EXP)|
 	ID (AST.VarExp(ID))|
 	NUM (AST.NumExp(NUM))|
-	CONST (AST.BoolExp(CONST))
+	CONST (AST.BoolExp(CONST))|
+	APPEXP (APPEXP)|
+	FN_DEF (FN_DEF)
 	
 	
 	
