@@ -70,3 +70,11 @@ fun printAST (Infilename) =
 	in 
 		printParsedAST(parsedVal)
 	end
+
+fun checkAndEval(Infilename) = 
+	let 
+		val parsedVal = parse_output(Infilename)
+		val typVal = typeCheckParsed(parsedVal)
+	in 
+		evaluateParsed(parsedVal)
+	end
