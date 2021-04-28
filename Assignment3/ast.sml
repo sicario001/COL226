@@ -56,6 +56,54 @@ fun typEnvLookup (var:id, env, env_global) =
 				    |   NONE 		=> (case List.find(fn (x, _) => x = var) env_global of
 													SOME (x, t)	=>	t
 												|	NONE 		=> (print(var^"\n");raise Fail "Environment lookup error"))			    
+
+
+
+fun toStringF(f:formula):string =
+	case f of 
+		FormulaExp (e)	=>	"FormulaExp ("^toStringE(e)^")"
+	|	FormulaFunDef (Fun (i1, i2, t, e)) => "FormulaFunDef (Fun (\""^i1^"\", \""^i2^"\", "^toStringT(t)^", "^toStringE(e)^"))"
+
+and toStringT(t:typ):string = 
+	case t of 
+		INT				=> "INT"
+	|	BOOL			=> "BOOL"
+	|	ARROW(t1, t2)	=> "ARROW ("^toStringT(t1)^", "^toStringT(t2)^")"
+
+and toStringE(e:exp):string = 
+	case e of 
+		NumExp (i)			=> "NumExp "^Int.toString(i)
+    | 	BoolExp (b)			=> "BoolExp "^Bool.toString(b)
+    |	VarExp (i)			=> "VarExp \""^i^"\""
+	| 	BinExp (b, e1, e2)	=> "BinExp ("^toStringBop(b)^", "^toStringE(e1)^", "^toStringE(e2)^")"
+    | 	UnExp (u, e)		=> "UnExp ("^toStringUop(u)^", "^toStringE(e)^")"
+	| 	LetExp (d, e)		=> "LetExp ("^toStringDec(d)^", "^toStringE(e)^")"
+    | 	IteExp (e1, e2, e3)	=> "IteExp ("^toStringE(e1)^", "^toStringE(e2)^", "^toStringE(e3)^")"
+	| 	Fn (i, t, e)		=> "Fn (\""^i^"\", "^toStringT(t)^", "^toStringE(e)^")"
+	| 	AppExp (e1, e2)		=> "AppExp ("^toStringE(e1)^", "^toStringE(e2)^")"
+
+and toStringBop(b: binop):string = 
+	case b of
+		Plus		=> "Plus"
+	|	Minus		=> "Minus"
+	|	Times		=> "Times"
+	|	Equals		=> "Equals"
+	|	LessThan	=> "LessThan"
+	|	GreaterThan	=> "GreaterThan"
+	|	And			=> "And"
+	|	Or			=> "Or"
+	|	Xor			=> "Xor"
+	|	Implies		=> "Implies"
+and toStringUop(u:unop):string = 
+	case u of
+		Negate		=> "Negate"
+	|	Not			=> "Not"
+
+and toStringDec(d:decl):string = 
+	case d of 
+		ValDecl(i, e)	=> "ValDecl (\""^i^"\", "^toStringE(e)^")"
+
+
 end
 
 

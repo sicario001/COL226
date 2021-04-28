@@ -2,7 +2,7 @@ structure TYPE_CHECKER  =
 struct
 open AST
 
-val brokenTypes = Fail "Error in evaluation!"
+val brokenTypes = Fail "Type checking failed!"
 
 
 fun isSameTyp(t1:typ, t2:typ):bool = 

@@ -59,3 +59,14 @@ fun evaluate (Infilename) =
 	in 
 		evaluateParsed(parsedVal)
 	end
+
+fun printParsedAST (parsedVal : AST.formula list) = 
+	if (null parsedVal)then (print("\n")) else (print(AST.toStringF(hd parsedVal)^"\n"); printParsedAST(tl parsedVal))
+
+
+fun printAST (Infilename) = 
+	let 
+		val parsedVal = parse_output(Infilename)
+	in 
+		printParsedAST(parsedVal)
+	end
