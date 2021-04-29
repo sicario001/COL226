@@ -1,0 +1,5 @@
+fun f(x:int):bool => x GREATERTHAN 1;
+fun g(x:int):int => 
+if (f x) then x TIMES (g x MINUS 1) else 1 fi;
+(g NEGATE 1);
+(g 10)

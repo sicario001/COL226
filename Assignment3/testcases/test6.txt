@@ -1,0 +1,14 @@
+let
+	f = fn(x:int->int):int => (x 2)
+in
+	let
+		g = fn(x:int->int):int => (x (f x))
+	in
+		let
+			f = fn (x:int):int => x PLUS 1 
+		in
+			(g f)
+		end
+	end
+end
+

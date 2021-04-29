@@ -11,6 +11,8 @@ type lexresult = (svalue, pos) token
 
 val line_num = ref 1;
 val col_num = ref 1;
+fun print_error(line_num, col_num, yytext) = 
+    print("Unknown Token:"^Int.toString(line_num)^":"^Int.toString(col_num)^":"^yytext^"\n");
 val eof = fn () => Tokens.EOF((!line_num,!col_num), (!line_num,!col_num));
 
 
@@ -72,7 +74,7 @@ val s = [
 \\000"
 ),
  (1, 
-"\003\003\003\003\003\003\003\003\003\016\018\003\003\003\003\003\
+"\003\003\003\003\003\003\003\003\003\016\019\003\003\018\003\003\
 \\003\003\003\003\003\003\003\003\003\003\003\003\003\003\003\003\
 \\016\003\003\003\003\003\003\003\015\014\003\003\003\012\003\003\
 \\010\010\010\010\010\010\010\010\010\010\009\008\003\006\003\003\
@@ -137,6 +139,17 @@ val s = [
 \\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
 \\000"
 ),
+ (18, 
+"\000\000\000\000\000\000\000\000\000\000\019\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000"
+),
 (0, "")]
 fun f x = x 
 val s = List.map f (List.rev (tl (List.rev s))) 
@@ -148,22 +161,23 @@ in Vector.fromList(List.map g
 [{fin = [], trans = 0},
 {fin = [], trans = 1},
 {fin = [], trans = 1},
-{fin = [(N 28)], trans = 0},
-{fin = [(N 26),(N 28)], trans = 4},
-{fin = [(N 26)], trans = 4},
-{fin = [(N 15),(N 28)], trans = 6},
-{fin = [(N 23)], trans = 0},
-{fin = [(N 13),(N 28)], trans = 0},
-{fin = [(N 20),(N 28)], trans = 0},
-{fin = [(N 7),(N 28)], trans = 10},
-{fin = [(N 7)], trans = 10},
-{fin = [(N 28)], trans = 12},
-{fin = [(N 18)], trans = 0},
-{fin = [(N 11),(N 28)], trans = 0},
-{fin = [(N 9),(N 28)], trans = 0},
-{fin = [(N 4),(N 28)], trans = 16},
-{fin = [(N 4)], trans = 16},
-{fin = [(N 1)], trans = 0}])
+{fin = [(N 30)], trans = 0},
+{fin = [(N 28),(N 30)], trans = 4},
+{fin = [(N 28)], trans = 4},
+{fin = [(N 17),(N 30)], trans = 6},
+{fin = [(N 25)], trans = 0},
+{fin = [(N 15),(N 30)], trans = 0},
+{fin = [(N 22),(N 30)], trans = 0},
+{fin = [(N 9),(N 30)], trans = 10},
+{fin = [(N 9)], trans = 10},
+{fin = [(N 30)], trans = 12},
+{fin = [(N 20)], trans = 0},
+{fin = [(N 13),(N 30)], trans = 0},
+{fin = [(N 11),(N 30)], trans = 0},
+{fin = [(N 6),(N 30)], trans = 16},
+{fin = [(N 6)], trans = 16},
+{fin = [(N 30)], trans = 18},
+{fin = [(N 3)], trans = 0}])
 end
 structure StartStates =
 	struct
@@ -205,20 +219,20 @@ let fun continue() = lex() in
 
 			(* Application actions *)
 
-  1 => (line_num := (!line_num) + 1; col_num := 1; lex())
-| 11 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, !col_num),(!line_num, !col_num)) end
-| 13 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, !col_num),(!line_num, !col_num)) end
-| 15 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, !col_num),(!line_num, !col_num)) end
-| 18 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, !col_num),(!line_num, !col_num)) end
-| 20 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, !col_num),(!line_num, !col_num)) end
-| 23 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, !col_num),(!line_num, !col_num)) end
-| 26 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, !col_num),(!line_num, !col_num)) end
-| 28 => (lex())
-| 4 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; lex() end
-| 7 => let val yytext=yymktext() in Tokens.NUM
+  11 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, !col_num),(!line_num, !col_num)) end
+| 13 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, !col_num),(!line_num, !col_num)) end
+| 15 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, !col_num),(!line_num, !col_num)) end
+| 17 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, !col_num),(!line_num, !col_num)) end
+| 20 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, !col_num),(!line_num, !col_num)) end
+| 22 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, !col_num),(!line_num, !col_num)) end
+| 25 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, !col_num),(!line_num, !col_num)) end
+| 28 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, !col_num),(!line_num, !col_num)) end
+| 3 => (line_num := (!line_num) + 1; col_num := 1; lex())
+| 30 => let val yytext=yymktext() in print_error(!line_num, !col_num, yytext); lex() end
+| 6 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; lex() end
+| 9 => let val yytext=yymktext() in Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
 	      (!line_num, !col_num), (!line_num, !col_num)) end
-| 9 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, !col_num),(!line_num, !col_num)) end
 | _ => raise Internal.LexerError
 
 		) end )

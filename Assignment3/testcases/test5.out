@@ -1,0 +1,11 @@
+program
+├── formula =>fn(id:type):type=>exp
+│   ├── ID f
+│   ├── Type (int->int)
+│   ├── Type int
+│   └── formula => (f g)
+│       ├── formula => ID
+│       │   └── ID "f"
+│       └── formula => NUM
+│           └── NUM 1
+└── Num :=2

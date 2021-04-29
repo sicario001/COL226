@@ -7,6 +7,8 @@ type lexresult = (svalue, pos) token
 
 val line_num = ref 1;
 val col_num = ref 1;
+fun print_error(line_num, col_num, yytext) = 
+    print("Unknown Token:"^Int.toString(line_num)^":"^Int.toString(col_num)^":"^yytext^"\n");
 val eof = fn () => Tokens.EOF((!line_num,!col_num), (!line_num,!col_num));
 
 
@@ -54,7 +56,7 @@ alphaNum = [A-Za-z0-9];
 digit = [0-9];
 ws = [\ \t];
 %%
-\n		=> (line_num := (!line_num) + 1; col_num := 1; lex());
+\n|"\r\n"	=> (line_num := (!line_num) + 1; col_num := 1; lex());
 {ws}+		=> (col_num := (!col_num)+size yytext ; lex());
 {digit}+ => (Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
@@ -67,5 +69,5 @@ ws = [\ \t];
 ":"		=> (col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, !col_num),(!line_num, !col_num)));
 "=>"		=> (col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, !col_num),(!line_num, !col_num)));
 {alpha}{alphaNum}*	=> (col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, !col_num),(!line_num, !col_num)));
- .		=> (lex());
+ .		=> (print_error(!line_num, !col_num, yytext); lex());
 

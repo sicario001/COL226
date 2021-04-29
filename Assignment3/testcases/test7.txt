@@ -1,0 +1,4 @@
+fun f(x:int->int):int => (x 1);
+fun g(x:int->int):int => (x (f x));
+fun f(x:int):int => (x PLUS 2);
+(g f)

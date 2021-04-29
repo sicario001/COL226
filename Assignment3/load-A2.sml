@@ -75,6 +75,7 @@ fun checkAndEval(Infilename) =
 	let 
 		val parsedVal = parse_output(Infilename)
 		val typVal = typeCheckParsed(parsedVal)
-	in 
+	in
+		printParsedAST(parsedVal);
 		evaluateParsed(parsedVal)
 	end

@@ -1,0 +1,36 @@
+program
+├── formula =>fn(id:type):type=>exp
+│   ├── ID x
+│   ├── Type (int->int)
+│   ├── Type int
+│   └── formula => (f g)
+│       ├── formula => ID
+│       │   └── ID "x"
+│       └── formula => NUM
+│           └── NUM 1
+├── formula =>fn(id:type):type=>exp
+│   ├── ID x
+│   ├── Type (int->int)
+│   ├── Type int
+│   └── formula => (f g)
+│       ├── formula => ID
+│       │   └── ID "x"
+│       └── formula => (f g)
+│           ├── formula => ID
+│           │   └── ID "f"
+│           └── formula => ID
+│               └── ID "x"
+├── formula =>fn(id:type):type=>exp
+│   ├── ID x
+│   ├── Type int
+│   ├── Type int
+│   └── formula => ( formula )
+│       ├── LPAREN "("
+│       ├── formula => formula PLUS formula
+│       │   ├── formula => ID
+│       │   │   └── ID "x"
+│       │   ├── PLUS "PLUS"
+│       │   └── formula => NUM
+│       │       └── NUM 2
+│       └── RPAREN ")"
+└── Num :=5

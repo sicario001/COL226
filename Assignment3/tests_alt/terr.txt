@@ -1,0 +1,5 @@
+let
+	f = fn (x:ints) : int => x OR 1
+in
+	(f1 3)
+end

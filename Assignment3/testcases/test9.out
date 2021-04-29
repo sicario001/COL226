@@ -1,0 +1,38 @@
+program
+├── formula =>fn(id:type):type=>exp
+│   ├── ID x
+│   ├── Type int
+│   ├── Type bool
+│   └── formula => formula GREATERTHAN formula
+│       ├── formula => ID
+│       │   └── ID "x"
+│       ├── GREATERTHAN "GREATERTHAN"
+│       └── formula => NUM
+│           └── NUM 1
+├── formula =>fn(id:type):type=>exp
+│   ├── ID x
+│   ├── Type int
+│   ├── Type int
+│   └── formula => IF formula THEN formula ELSE formula FI
+│       ├── formula => (f g)
+│       │   ├── formula => ID
+│       │   │   └── ID "f"
+│       │   └── formula => ID
+│       │       └── ID "x"
+│       ├── formula => formula TIMES formula
+│       │   ├── formula => ID
+│       │   │   └── ID "x"
+│       │   ├── TIMES "TIMES"
+│       │   └── formula => (f g)
+│       │       ├── formula => ID
+│       │       │   └── ID "g"
+│       │       └── formula => formula MINUS formula
+│       │           ├── formula => ID
+│       │           │   └── ID "x"
+│       │           ├── MINUS "MINUS"
+│       │           └── formula => NUM
+│       │               └── NUM 1
+│       └── formula => NUM
+│           └── NUM 1
+├── Num :=1
+└── Num :=3628800
