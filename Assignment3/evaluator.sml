@@ -11,26 +11,26 @@ fun logical_implies (s1:bool, s2:bool):bool =
 
 fun evalExp(e:exp, env, env_global):value =
     case e of
-	        NumExp i            => IntVal i
-        |   BoolExp b           => BoolVal b
-        |   VarExp x            => envLookup (x, env, env_global)	  
-        |   BinExp (b, e1, e2)  => evalBinExp(b, e1, e2, env, env_global)
-        |   UnExp (u, e)        => evalUnExp(u, e, env, env_global)
+	        NumExp (i, _, _)            => IntVal i
+        |   BoolExp (b, _, _)           => BoolVal b
+        |   VarExp (x, _, _)            => envLookup (x, env, env_global)	  
+        |   BinExp (b, e1, e2, _, _)    => evalBinExp(b, e1, e2, env, env_global)
+        |   UnExp (u, e, _, _)          => evalUnExp(u, e, env, env_global)
         (* take into account the case when there is fn type in LetExp *)
-        |   LetExp(ValDecl(x, e1), e2)  =>
+        |   LetExp(ValDecl(x, e1), e2, _, _)  =>
   	        (let
 	            val v1 = evalExp (e1, env, env_global)
 	        in
 	            evalExp(e2, envAdd (x, v1, env), env_global)
             end)
-        |   IteExp (e1, e2, e3) =>
+        |   IteExp (e1, e2, e3, _, _) =>
                 (case (evalExp(e1, env, env_global)) of
                     BoolVal true    =>  evalExp (e2, env, env_global)
                 |   BoolVal false   =>  evalExp (e3, env, env_global)
                 |   _               =>  raise brokenTypes)
 
-        |   Fn (i1, t , e)  => FunVal(i1, e, env, env_global)
-        |   AppExp (e1, e2)     => 
+        |   Fn (i1, t , e, _, _)  => FunVal(i1, e, env, env_global)
+        |   AppExp (e1, e2, _, _)     => 
                     (let
                         val v1 = evalExp(e1, env, env_global)
                     in 
@@ -73,8 +73,8 @@ evalProgram(p:formula list, env_global):value list =
     if (null p) then ([])
     else(
         case (hd p) of 
-                FormulaFunDef(Fun (i1, i2, t, e))  => ((evalProgram(tl p, envAdd(i1, RecFunVal(i1, i2, e, [], env_global), env_global ))))
-            |   FormulaExp e                            => (evalExp(e, [], env_global)::(evalProgram(tl p, env_global)))
+                FormulaFunDef(Fun (i1, i2, t, e, _, _))         => ((evalProgram(tl p, envAdd(i1, RecFunVal(i1, i2, e, [], env_global), env_global ))))
+            |   FormulaExp (e, _, _)                            => (evalExp(e, [], env_global)::(evalProgram(tl p, env_global)))
     ) 
 
 end

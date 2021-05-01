@@ -58,7 +58,7 @@ ws = [\ \t];
 %%
 \n|"\r\n"	=> (line_num := (!line_num) + 1; col_num := 1; lex());
 {ws}+		=> (col_num := (!col_num)+size yytext ; lex());
-{digit}+ => (Tokens.NUM
+{digit}+ => (col_num := (!col_num)+size yytext ;Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
 	      (!line_num, !col_num), (!line_num, !col_num)));
 "("		=> (col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, !col_num),(!line_num, !col_num)));

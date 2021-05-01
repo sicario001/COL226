@@ -407,10 +407,10 @@ MlyValue.statement (fn _ => let val  (formula as formula1) = formula1
 end)
  in ( LrTable.NT 1, ( result, formula1left, TERM1right), rest671)
 end
-|  ( 5, ( ( _, ( MlyValue.EXP EXP1, EXP1left, EXP1right)) :: rest671))
- => let val  result = MlyValue.formula (fn _ => let val  (EXP as EXP1)
- = EXP1 ()
- in (AST.FormulaExp(EXP))
+|  ( 5, ( ( _, ( MlyValue.EXP EXP1, (EXPleft as EXP1left), (EXPright
+ as EXP1right))) :: rest671)) => let val  result = MlyValue.formula
+ (fn _ => let val  (EXP as EXP1) = EXP1 ()
+ in (AST.FormulaExp(EXP, EXPleft, EXPright))
 end)
  in ( LrTable.NT 5, ( result, EXP1left, EXP1right), rest671)
 end
@@ -422,16 +422,19 @@ end)
  in ( LrTable.NT 5, ( result, FUN_DEF1left, FUN_DEF1right), rest671)
 
 end
-|  ( 7, ( ( _, ( MlyValue.EXP EXP1, _, EXP1right)) :: _ :: ( _, ( 
-MlyValue.TYPE TYPE2, _, _)) :: _ :: _ :: ( _, ( MlyValue.TYPE TYPE1, _
-, _)) :: _ :: ( _, ( MlyValue.ID ID2, _, _)) :: _ :: ( _, ( 
-MlyValue.ID ID1, _, _)) :: ( _, ( _, FUN1left, _)) :: rest671)) => let
- val  result = MlyValue.FUN_DEF (fn _ => let val  ID1 = ID1 ()
+|  ( 7, ( ( _, ( MlyValue.EXP EXP1, _, (EXPright as EXP1right))) :: _
+ :: ( _, ( MlyValue.TYPE TYPE2, _, _)) :: _ :: _ :: ( _, ( 
+MlyValue.TYPE TYPE1, _, _)) :: _ :: ( _, ( MlyValue.ID ID2, _, _)) ::
+ _ :: ( _, ( MlyValue.ID ID1, _, _)) :: ( _, ( _, (FUNleft as FUN1left
+), _)) :: rest671)) => let val  result = MlyValue.FUN_DEF (fn _ => let
+ val  ID1 = ID1 ()
  val  ID2 = ID2 ()
  val  TYPE1 = TYPE1 ()
  val  TYPE2 = TYPE2 ()
  val  (EXP as EXP1) = EXP1 ()
- in (AST.Fun(ID1, ID2, AST.ARROW(TYPE1, TYPE2), EXP))
+ in (
+AST.Fun(ID1, ID2, AST.ARROW(TYPE1, TYPE2), EXP, FUNleft, EXPright))
+
 end)
  in ( LrTable.NT 6, ( result, FUN1left, EXP1right), rest671)
 end
@@ -466,34 +469,35 @@ MlyValue.DECL (fn _ => let val  (ID as ID1) = ID1 ()
 end)
  in ( LrTable.NT 4, ( result, ID1left, EXP1right), rest671)
 end
-|  ( 13, ( ( _, ( _, _, RPAREN1right)) :: ( _, ( MlyValue.EXP EXP2, _,
- _)) :: ( _, ( MlyValue.EXP EXP1, _, _)) :: ( _, ( _, LPAREN1left, _))
- :: rest671)) => let val  result = MlyValue.APPEXP (fn _ => let val  
-EXP1 = EXP1 ()
+|  ( 13, ( ( _, ( _, _, (RPARENright as RPAREN1right))) :: ( _, ( 
+MlyValue.EXP EXP2, _, _)) :: ( _, ( MlyValue.EXP EXP1, _, _)) :: ( _, 
+( _, (LPARENleft as LPAREN1left), _)) :: rest671)) => let val  result
+ = MlyValue.APPEXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.AppExp(EXP1, EXP2))
+ in (AST.AppExp(EXP1, EXP2, LPARENleft, RPARENright))
 end)
  in ( LrTable.NT 9, ( result, LPAREN1left, RPAREN1right), rest671)
 end
-|  ( 14, ( ( _, ( MlyValue.EXP EXP1, _, EXP1right)) :: _ :: ( _, ( 
-MlyValue.TYPE TYPE2, _, _)) :: _ :: _ :: ( _, ( MlyValue.TYPE TYPE1, _
-, _)) :: _ :: ( _, ( MlyValue.ID ID1, _, _)) :: _ :: ( _, ( _, FN1left
-, _)) :: rest671)) => let val  result = MlyValue.FN_DEF (fn _ => let
- val  (ID as ID1) = ID1 ()
+|  ( 14, ( ( _, ( MlyValue.EXP EXP1, _, (EXPright as EXP1right))) :: _
+ :: ( _, ( MlyValue.TYPE TYPE2, _, _)) :: _ :: _ :: ( _, ( 
+MlyValue.TYPE TYPE1, _, _)) :: _ :: ( _, ( MlyValue.ID ID1, _, _)) ::
+ _ :: ( _, ( _, (FNleft as FN1left), _)) :: rest671)) => let val  
+result = MlyValue.FN_DEF (fn _ => let val  (ID as ID1) = ID1 ()
  val  TYPE1 = TYPE1 ()
  val  TYPE2 = TYPE2 ()
  val  (EXP as EXP1) = EXP1 ()
- in (AST.Fn(ID, AST.ARROW(TYPE1, TYPE2), EXP))
+ in (AST.Fn(ID, AST.ARROW(TYPE1, TYPE2), EXP, FNleft, EXPright))
 end)
  in ( LrTable.NT 7, ( result, FN1left, EXP1right), rest671)
 end
-|  ( 15, ( ( _, ( _, _, FI1right)) :: ( _, ( MlyValue.EXP EXP3, _, _))
- :: _ :: ( _, ( MlyValue.EXP EXP2, _, _)) :: _ :: ( _, ( MlyValue.EXP 
-EXP1, _, _)) :: ( _, ( _, IF1left, _)) :: rest671)) => let val  result
- = MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
+|  ( 15, ( ( _, ( _, _, (FIright as FI1right))) :: ( _, ( MlyValue.EXP
+ EXP3, _, _)) :: _ :: ( _, ( MlyValue.EXP EXP2, _, _)) :: _ :: ( _, ( 
+MlyValue.EXP EXP1, _, _)) :: ( _, ( _, (IFleft as IF1left), _)) :: 
+rest671)) => let val  result = MlyValue.EXP (fn _ => let val  EXP1 = 
+EXP1 ()
  val  EXP2 = EXP2 ()
  val  EXP3 = EXP3 ()
- in (AST.IteExp(EXP1, EXP2, EXP3))
+ in (AST.IteExp(EXP1, EXP2, EXP3, IFleft, FIright))
 end)
  in ( LrTable.NT 3, ( result, IF1left, FI1right), rest671)
 end
@@ -501,7 +505,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Plus, EXP1, EXP2))
+ in (AST.BinExp(AST.Plus, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -509,7 +513,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Minus, EXP1, EXP2))
+ in (AST.BinExp(AST.Minus, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -517,7 +521,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Times, EXP1, EXP2))
+ in (AST.BinExp(AST.Times, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -525,22 +529,23 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.GreaterThan, EXP1, EXP2))
-end)
+ in (AST.BinExp(AST.GreaterThan, EXP1, EXP2, EXP1left, EXP2right))
+end
+)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
 |  ( 20, ( ( _, ( MlyValue.EXP EXP2, _, EXP2right)) :: _ :: ( _, ( 
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.LessThan, EXP1, EXP2))
+ in (AST.BinExp(AST.LessThan, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
-|  ( 21, ( ( _, ( MlyValue.EXP EXP1, _, EXP1right)) :: ( _, ( _, 
-NEGATE1left, _)) :: rest671)) => let val  result = MlyValue.EXP (fn _
- => let val  (EXP as EXP1) = EXP1 ()
- in (AST.UnExp(AST.Negate, EXP))
+|  ( 21, ( ( _, ( MlyValue.EXP EXP1, _, (EXPright as EXP1right))) :: (
+ _, ( _, (NEGATEleft as NEGATE1left), _)) :: rest671)) => let val  
+result = MlyValue.EXP (fn _ => let val  (EXP as EXP1) = EXP1 ()
+ in (AST.UnExp(AST.Negate, EXP, NEGATEleft, EXPright))
 end)
  in ( LrTable.NT 3, ( result, NEGATE1left, EXP1right), rest671)
 end
@@ -548,7 +553,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.And, EXP1, EXP2))
+ in (AST.BinExp(AST.And, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -556,7 +561,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Or, EXP1, EXP2))
+ in (AST.BinExp(AST.Or, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -564,7 +569,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Xor, EXP1, EXP2))
+ in (AST.BinExp(AST.Xor, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -572,7 +577,7 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Equals, EXP1, EXP2))
+ in (AST.BinExp(AST.Equals, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
@@ -580,23 +585,23 @@ end
 MlyValue.EXP EXP1, EXP1left, _)) :: rest671)) => let val  result = 
 MlyValue.EXP (fn _ => let val  EXP1 = EXP1 ()
  val  EXP2 = EXP2 ()
- in (AST.BinExp(AST.Implies, EXP1, EXP2))
+ in (AST.BinExp(AST.Implies, EXP1, EXP2, EXP1left, EXP2right))
 end)
  in ( LrTable.NT 3, ( result, EXP1left, EXP2right), rest671)
 end
-|  ( 27, ( ( _, ( MlyValue.EXP EXP1, _, EXP1right)) :: ( _, ( _, 
-NOT1left, _)) :: rest671)) => let val  result = MlyValue.EXP (fn _ =>
- let val  (EXP as EXP1) = EXP1 ()
- in (AST.UnExp(AST.Not, EXP))
+|  ( 27, ( ( _, ( MlyValue.EXP EXP1, _, (EXPright as EXP1right))) :: (
+ _, ( _, (NOTleft as NOT1left), _)) :: rest671)) => let val  result = 
+MlyValue.EXP (fn _ => let val  (EXP as EXP1) = EXP1 ()
+ in (AST.UnExp(AST.Not, EXP, NOTleft, EXPright))
 end)
  in ( LrTable.NT 3, ( result, NOT1left, EXP1right), rest671)
 end
-|  ( 28, ( ( _, ( _, _, END1right)) :: ( _, ( MlyValue.EXP EXP1, _, _)
-) :: _ :: ( _, ( MlyValue.DECL DECL1, _, _)) :: ( _, ( _, LET1left, _)
-) :: rest671)) => let val  result = MlyValue.EXP (fn _ => let val  (
-DECL as DECL1) = DECL1 ()
+|  ( 28, ( ( _, ( _, _, (ENDright as END1right))) :: ( _, ( 
+MlyValue.EXP EXP1, _, _)) :: _ :: ( _, ( MlyValue.DECL DECL1, _, _))
+ :: ( _, ( _, (LETleft as LET1left), _)) :: rest671)) => let val  
+result = MlyValue.EXP (fn _ => let val  (DECL as DECL1) = DECL1 ()
  val  (EXP as EXP1) = EXP1 ()
- in (AST.LetExp(DECL, EXP))
+ in (AST.LetExp(DECL, EXP, LETleft, ENDright))
 end)
  in ( LrTable.NT 3, ( result, LET1left, END1right), rest671)
 end
@@ -607,23 +612,24 @@ MlyValue.EXP (fn _ => let val  (EXP as EXP1) = EXP1 ()
 end)
  in ( LrTable.NT 3, ( result, LPAREN1left, RPAREN1right), rest671)
 end
-|  ( 30, ( ( _, ( MlyValue.ID ID1, ID1left, ID1right)) :: rest671)) =>
- let val  result = MlyValue.EXP (fn _ => let val  (ID as ID1) = ID1 ()
- in (AST.VarExp(ID))
+|  ( 30, ( ( _, ( MlyValue.ID ID1, (IDleft as ID1left), (IDright as 
+ID1right))) :: rest671)) => let val  result = MlyValue.EXP (fn _ =>
+ let val  (ID as ID1) = ID1 ()
+ in (AST.VarExp(ID, IDleft, IDright))
 end)
  in ( LrTable.NT 3, ( result, ID1left, ID1right), rest671)
 end
-|  ( 31, ( ( _, ( MlyValue.NUM NUM1, NUM1left, NUM1right)) :: rest671)
-) => let val  result = MlyValue.EXP (fn _ => let val  (NUM as NUM1) = 
-NUM1 ()
- in (AST.NumExp(NUM))
+|  ( 31, ( ( _, ( MlyValue.NUM NUM1, (NUMleft as NUM1left), (NUMright
+ as NUM1right))) :: rest671)) => let val  result = MlyValue.EXP (fn _
+ => let val  (NUM as NUM1) = NUM1 ()
+ in (AST.NumExp(NUM, NUMleft, NUMright))
 end)
  in ( LrTable.NT 3, ( result, NUM1left, NUM1right), rest671)
 end
-|  ( 32, ( ( _, ( MlyValue.CONST CONST1, CONST1left, CONST1right)) :: 
-rest671)) => let val  result = MlyValue.EXP (fn _ => let val  (CONST
- as CONST1) = CONST1 ()
- in (AST.BoolExp(CONST))
+|  ( 32, ( ( _, ( MlyValue.CONST CONST1, (CONSTleft as CONST1left), (
+CONSTright as CONST1right))) :: rest671)) => let val  result = 
+MlyValue.EXP (fn _ => let val  (CONST as CONST1) = CONST1 ()
+ in (AST.BoolExp(CONST, CONSTleft, CONSTright))
 end)
  in ( LrTable.NT 3, ( result, CONST1left, CONST1right), rest671)
 end

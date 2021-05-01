@@ -42,9 +42,11 @@ fun parse_output (Infilename)=
 	handle ParseErrorFound (s, line_num, col_num) => (print("Syntax Error:"^Int.toString(line_num)^":"^Int.toString(col_num)^":"^s^"\n"); [])
 fun evaluateParsed (parsedVal : AST.formula list) = 
 	EVALUATOR.evalProgram(parsedVal, [])
+	handle Fail s => (print(s^"\n"); [])
 
 fun typeCheckParsed (parsedVal : AST.formula list) = 
 	TYPE_CHECKER.checkProgram(parsedVal, [])
+	(* handle Fail s => (print(s^"\n"); []) *)
 
 fun typeCheck (Infilename) = 
 	let 
@@ -71,11 +73,21 @@ fun printAST (Infilename) =
 		printParsedAST(parsedVal)
 	end
 
+fun parseAndPrint(Infilename) = 
+	let
+		val parsedVal = parse_output(Infilename)
+	in
+		print("\nParsed program :\n");
+		printParsedAST(parsedVal);
+		parsedVal
+	end
+
 fun checkAndEval(Infilename) = 
 	let 
-		val parsedVal = parse_output(Infilename)
+		val parsedVal = parseAndPrint(Infilename)
 		val typVal = typeCheckParsed(parsedVal)
 	in
-		printParsedAST(parsedVal);
+		print("\nProgram evaluation :\n");
 		evaluateParsed(parsedVal)
 	end
+	handle Fail s => (print(s^"\n"); [])

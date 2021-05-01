@@ -230,7 +230,7 @@ let fun continue() = lex() in
 | 3 => (line_num := (!line_num) + 1; col_num := 1; lex())
 | 30 => let val yytext=yymktext() in print_error(!line_num, !col_num, yytext); lex() end
 | 6 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; lex() end
-| 9 => let val yytext=yymktext() in Tokens.NUM
+| 9 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ;Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
 	      (!line_num, !col_num), (!line_num, !col_num)) end
 | _ => raise Internal.LexerError
