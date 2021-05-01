@@ -219,20 +219,20 @@ let fun continue() = lex() in
 
 			(* Application actions *)
 
-  11 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, !col_num),(!line_num, !col_num)) end
-| 13 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, !col_num),(!line_num, !col_num)) end
-| 15 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, !col_num),(!line_num, !col_num)) end
-| 17 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, !col_num),(!line_num, !col_num)) end
-| 20 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, !col_num),(!line_num, !col_num)) end
-| 22 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, !col_num),(!line_num, !col_num)) end
-| 25 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, !col_num),(!line_num, !col_num)) end
-| 28 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, !col_num),(!line_num, !col_num)) end
+  11 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 13 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 15 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 17 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 20 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 22 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 25 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
+| 28 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, (!col_num)-size yytext),(!line_num, !col_num)) end
 | 3 => (line_num := (!line_num) + 1; col_num := 1; lex())
 | 30 => let val yytext=yymktext() in print_error(!line_num, !col_num, yytext); lex() end
 | 6 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ; lex() end
 | 9 => let val yytext=yymktext() in col_num := (!col_num)+size yytext ;Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
-	      (!line_num, !col_num), (!line_num, !col_num)) end
+	      (!line_num, (!col_num)-size yytext), (!line_num, !col_num)) end
 | _ => raise Internal.LexerError
 
 		) end )

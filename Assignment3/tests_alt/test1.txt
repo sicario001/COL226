@@ -1,6 +1,6 @@
-fun func1 (x:int):int => x PLUS 1 ;
+fun func1 (x:int):int => x PLUS 1;
 let
-	x = 5
+	x = TRUE
 in
-	(func1 x PLUS 1)
+	if TRUE then TRUE else 10 fi
 end

@@ -60,14 +60,14 @@ ws = [\ \t];
 {ws}+		=> (col_num := (!col_num)+size yytext ; lex());
 {digit}+ => (col_num := (!col_num)+size yytext ;Tokens.NUM
 	     (List.foldl (fn (a,r) => ord(a) - ord(#"0") + 10*r) 0 (explode yytext),
-	      (!line_num, !col_num), (!line_num, !col_num)));
-"("		=> (col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, !col_num),(!line_num, !col_num)));
-")"		=> (col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, !col_num),(!line_num, !col_num)));
-";"		=> (col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, !col_num),(!line_num, !col_num)));
-"="		=> (col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, !col_num),(!line_num, !col_num)));
-"->"		=> (col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, !col_num),(!line_num, !col_num))); 
-":"		=> (col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, !col_num),(!line_num, !col_num)));
-"=>"		=> (col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, !col_num),(!line_num, !col_num)));
-{alpha}{alphaNum}*	=> (col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, !col_num),(!line_num, !col_num)));
+	      (!line_num, (!col_num)-size yytext), (!line_num, !col_num)));
+"("		=> (col_num := (!col_num)+size yytext ; Tokens.LPAREN((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+")"		=> (col_num := (!col_num)+size yytext ; Tokens.RPAREN((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+";"		=> (col_num := (!col_num)+size yytext ; Tokens.TERM((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+"="		=> (col_num := (!col_num)+size yytext ; Tokens.EQ((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+"->"		=> (col_num := (!col_num)+size yytext ; Tokens.ARROW((!line_num, (!col_num)-size yytext),(!line_num, !col_num))); 
+":"		=> (col_num := (!col_num)+size yytext ; Tokens.COLON((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+"=>"		=> (col_num := (!col_num)+size yytext ; Tokens.DEF((!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
+{alpha}{alphaNum}*	=> (col_num := (!col_num)+size yytext ; findKeywords(yytext,(!line_num, (!col_num)-size yytext),(!line_num, !col_num)));
  .		=> (print_error(!line_num, !col_num, yytext); lex());
 
